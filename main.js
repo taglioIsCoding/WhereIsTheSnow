@@ -2,58 +2,85 @@ console.log("Start");
 
 
 const APP_ID = "935da42f9e29eb12fc7af5abb263198e"
-const BASE_URI= "http://api.openweathermap.org/data/2.5/forecast"
+const BASE_URI = "http://api.openweathermap.org/data/2.5/forecast"
 //API=http://samples.openweathermap.org/data/2.5/forecast?q=London,us&mode=xml&appid=b6907d289e10d714a6e88b30761fae22
 //Link icone : http://openweathermap.org/img/wn/10d@2x.png
 
 //ricava il posto dell'API e le previsioni
-function getWeatherURI(city, countryCode, mode = "json"){
+function getWeatherURI(city, countryCode, mode = "json") {
   return `${BASE_URI}?q=${city},${countryCode}&mode=${mode}&appid=${APP_ID}`
 }
 
 var mymap = undefined
-let previsioni =  [] //una lista
+let previsioni = [] //una lista
 let suggestions = [] // un altra lista
 
-fetch(getWeatherURI( "Borno", "it"))
-    .then(response => response.json())
-    .then(body => { //console.log(body.city.coord)
+fetch(getWeatherURI("Brescia", "it"))
+  .then(response => response.json())
+  .then(body => { //console.log(body.city.coord)
 
 
-      console.log (body.list[0].weather) //stampa la prima previsione
+      console.log(body.list[0].weather) //stampa la prima previsione
 
       body.list.forEach(p => {
         let previsione = {
-             codice: Math.trunc(p.weather[0].id / 100), //codice che indica con una cifra che tempo farà
-             data: new Date(p.dt * 1000), //converto la data dt che era fornita in unix.timestamp
-             t: Math.trunc (p.main.temp - 273.15) //ricavo la temperatura e da kelvin la converto in celsious
+          codice: Math.trunc(p.weather[0].id / 100), //codice che indica con una cifra che tempo farà
+          data: new Date(p.dt * 1000), //converto la data dt che era fornita in unix.timestamp
+          t: Math.trunc(p.main.temp - 273.15) //ricavo la temperatura e da kelvin la converto in celsious
         }
         previsioni.push(previsione) //per ogni previsione viene aggiunta alla lista previsioni
       })
 
       console.log(previsioni)
 
-      const { lat , lon } = body.city.coord //assegno il valore di lat e lon a due variabili con lo stesso nome
+      const {
+        lat,
+        lon
+      } = body.city.coord //assegno il valore di lat e lon a due variabili con lo stesso nome
 
-      mymap =  L.map('mapid').setView([ lat , lon], 13);
+      mymap = L.map('mapid').setView([lat, lon], 13);
       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-      	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-      	maxZoom: 18,
-      	id: 'mapbox.streets',
-      	accessToken: 'pk.eyJ1IjoidGFnbGlvaXNjb2RpbmciLCJhIjoiY2p6anUzZHoxMGR0cTNscWE2ZHFwN3EzbyJ9._JJVq3peR2ykjC9RvV0yNw'
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox.streets',
+        accessToken: 'pk.eyJ1IjoidGFnbGlvaXNjb2RpbmciLCJhIjoiY2p6anUzZHoxMGR0cTNscWE2ZHFwN3EzbyJ9._JJVq3peR2ykjC9RvV0yNw'
       }).addTo(mymap);
-      var marker = L.marker([ lat , lon ]).addTo(mymap);
+      var marker = L.marker([lat, lon]).addTo(mymap);
 
-      const chart = document.getElementById("myChart") // è il canvas e lo recupera tramite il suo id
-      var myChart = new Chart( chart , {
-          type: 'bar',
-          data:{
-            datasets:[{
-              label: "temperarute ",
-              data: previsioni.map(previsione => previsione.t),
+
+      var ctx = document.getElementById('myChart'); // è il canvas e lo recupera tramite il suo id
+      var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          //labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+          datasets: [{
+            label: 'Temperature',
+            borderColor: 'rgba(255, 0, 0, 1)',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            data: previsioni.map(previsione => { //il metodo .map() chiama una funzione per ogni elemnto dell'array
+              return {
+                t: previsione.data,
+                y: previsione.t
+              }
+            })
+          }]
+        },
+        options: {
+          scales: {
+            xAxes: [{
+              type: 'time',
+
+            }],
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
             }]
           }
-        })
+        }
+      });
+    } //body
+  ) //then
 
-    }
-    )
+//}
+//)
