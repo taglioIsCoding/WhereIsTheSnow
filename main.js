@@ -20,15 +20,15 @@ fetch(getWeatherURI( "Borno", "it"))
     .then(body => { //console.log(body.city.coord)
 
 
-      console.log (body.list[0].weather )
+      console.log (body.list[0].weather) //stampa la prima previsione
 
       body.list.forEach(p => {
         let previsione = {
-             codice: p.weather.id
+             codice: Math.trunc(p.weather[0].id / 100), //codice che indica con una cifra che tempo farà
+             data: new Date(p.dt * 1000), //converto la data dt che era fornita in unix.timestamp
+             t: Math.trunc (p.main.temp - 273.15) //ricavo la temperatura e da kelvin la converto in celsious
         }
-
-        previsioni.push(previsione)
-
+        previsioni.push(previsione) //per ogni previsione viene aggiunta alla lista previsioni
       })
 
       console.log(previsioni)
@@ -43,6 +43,17 @@ fetch(getWeatherURI( "Borno", "it"))
       	accessToken: 'pk.eyJ1IjoidGFnbGlvaXNjb2RpbmciLCJhIjoiY2p6anUzZHoxMGR0cTNscWE2ZHFwN3EzbyJ9._JJVq3peR2ykjC9RvV0yNw'
       }).addTo(mymap);
       var marker = L.marker([ lat , lon ]).addTo(mymap);
+
+      const chart = document.getElementById("myChart") // è il canvas e lo recupera tramite il suo id
+      var myChart = new Chart( chart , {
+          type: 'bar',
+          data:{
+            datasets:[{
+              label: "temperarute ",
+              data: previsioni.map(previsione => previsione.t),
+            }]
+          }
+        })
 
     }
     )
