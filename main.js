@@ -20,7 +20,9 @@ fetch(getWeatherURI("Brescia", "it"))
   .then(body => { //console.log(body.city.coord)
 
 
-      console.log(body.list[0].weather) //stampa la prima previsione
+      console.log(body.list[0].weather); //stampa la prima previsione
+
+      body.list.splice(9, body.list.length - 9) // riduco i vslori che visualizzo sul grafico a 9
 
       body.list.forEach(p => {
         let previsione = {
@@ -54,7 +56,7 @@ fetch(getWeatherURI("Brescia", "it"))
         data: {
           //labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
           datasets: [{
-            label: 'Temperature',
+            label: 'temperatures',
             borderColor: 'rgba(255, 0, 0, 1)',
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
             data: previsioni.map(previsione => { //il metodo .map() chiama una funzione per ogni elemnto dell'array
@@ -62,10 +64,32 @@ fetch(getWeatherURI("Brescia", "it"))
                 t: previsione.data,
                 y: previsione.t
               }
-            })
+            }),
+            datalabels: { //ombrellini più in alto
+              align: 'end',
+              anchor: 'end'
+            }
           }]
         },
         options: {
+          plugins: {
+            datalabels: {
+              formatter: function(value, context) {
+                let label = ""
+                const UMBRELLA = "\u2602"
+                const SUN = "\u2600"
+                const SNOW = "\u2744"
+                if (previsioni[context.dataIndex].codice < 6) {
+                  label += UMBRELLA
+                } else if (previsioni[context.dataIndex].codice = 8) {
+                  label += SUN
+                } else if (previsioni[context.dataIndex].codice = 6) {
+                  label += "SCIOLINA LA TAVOLAAAA " + SNOW
+                }
+                return label;
+              }
+            }
+          },
           scales: {
             xAxes: [{
               type: 'time',
@@ -75,7 +99,8 @@ fetch(getWeatherURI("Brescia", "it"))
               ticks: {
                 beginAtZero: true
               }
-            }]
+            }],
+
           }
         }
       });
