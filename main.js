@@ -15,11 +15,12 @@ var mymap = undefined
 let previsioni = [] //una lista
 let suggestions = [] // un altra lista
 
+
 fetch(getWeatherURI("Brescia", "it"))
   .then(response => response.json())
   .then(body => { //console.log(body.city.coord)
 
-
+      console.log(document.getElementById("inputid").value);
       console.log(body.list[0].weather); //stampa la prima previsione
 
       body.list.splice(9, body.list.length - 9) // riduco i vslori che visualizzo sul grafico a 9
@@ -56,7 +57,7 @@ fetch(getWeatherURI("Brescia", "it"))
         data: {
           //labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
           datasets: [{
-            label: 'temperatures',
+            label: 'Temperatures',
             borderColor: 'rgba(255, 0, 0, 1)',
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
             data: previsioni.map(previsione => { //il metodo .map() chiama una funzione per ogni elemnto dell'array
