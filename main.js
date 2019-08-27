@@ -15,9 +15,10 @@ function getWeatherURI(city, countryCode, mode = "json") {
 var mymap = undefined
 let previsioni = [] //una lista
 let suggestions = [] // un altra lista
+let city = "Milano"
+city = window.prompt("Where are you looking for snow?");
 
-
-  fetch(getWeatherURI("Milano", "it"))
+  fetch(getWeatherURI(city, "it"))
     .then(response => response.json())
     .then(body => { //console.log(body.city.coord)
 
