@@ -21,7 +21,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
   </script>
-
+  <link rel="shortcut icon" href="favicon.ico">
 </head>
 
 
@@ -29,17 +29,14 @@
 <body>
   <h1 align="center">Where is the snow?</h1>
   <div>
-    <form align="center">
-      <input id="inputid" type="text" name="place" placeholder="Insert a city" required>
-      <button id="buttonid" type="submit" name="button" onclick="main.js">GO!</button>
+    <form align="center" id="ciao">
+      <!-- <input id="inputid" type="text" name="place" placeholder="Insert a city" required> -->
+      <button id="buttonid" type="submit" name="button" onclick="setCity()">TRY ME!</button>
   </div>
   <div id="mapid"></div>
   <canvas id="myChart" width="400" height="150"></canvas>
   <div id="chartjs-tooltip"></div>
-  <script src="main.js">
-
-
-  </script>
+  <script src="main.js"></script>
 
 </body>
 
