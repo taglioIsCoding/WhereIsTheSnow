@@ -83,11 +83,11 @@ city = window.prompt("Where are you looking for snow?");
                   const SUN = "\u2600"
                   const SNOW = "\u2744"
                   if (previsioni[context.dataIndex].codice < 6) {
-                    label += UMBRELLA
+                    label += "Take the: "+ UMBRELLA
                   } else if (previsioni[context.dataIndex].codice = 8) {
                     label += SUN
                   } else if (previsioni[context.dataIndex].codice = 6) {
-                    label += "SCIOLINA LA TAVOLAAAA " + SNOW
+                    label += "Yeeee" + SNOW
                   }
                   return label;
                 }
